@@ -6,16 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Imports
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const userRouter_1 = __importDefault(require("./auth/userRouter"));
 const app = (0, express_1.default)();
-const port = 3001;
+const port = process.env.PORT ? parseInt(process.env.PORT) : 3001;
 // Middleware
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // Routes
-app.get("/", (req, res) => {
-    console.log(req.body);
-    res.send("Hello world");
-});
+app.use("/", userRouter_1.default);
 // Start server
 app.listen(port, () => {
     console.log("Server started");
