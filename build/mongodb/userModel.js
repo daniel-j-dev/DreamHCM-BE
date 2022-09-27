@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.getUserByEmail = exports.getAllUsers = void 0;
+exports.UNSAFE_getUserByEmail = exports.createUser = exports.getUserByEmail = exports.getAllUsers = void 0;
 const { user } = require("./schemas");
 // Get all users
 const getAllUsers = () => {
@@ -21,7 +21,15 @@ const getUserByEmail = (email) => {
     return user.findOne({ email: email });
 };
 exports.getUserByEmail = getUserByEmail;
+// Create user
 const createUser = (usrObj) => __awaiter(void 0, void 0, void 0, function* () {
     return user.create(usrObj);
 });
 exports.createUser = createUser;
+// Returns user with password hash
+const UNSAFE_getUserByEmail = (email) => {
+    return user
+        .findOne({ email: email }, { _id: 1, email: 1, password: 1, dateAdded: 1 })
+        .select();
+};
+exports.UNSAFE_getUserByEmail = UNSAFE_getUserByEmail;

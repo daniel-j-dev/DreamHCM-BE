@@ -45,7 +45,9 @@ app.use((err, _req, res, next) => {
     res.status(500).send("Server error");
 });
 // Connect to MongoDB
-mongoose_1.default.connect(process.env.MONGODB_URI || "", (err) => {
+if (!process.env.MONGODB_URI)
+    throw '"MONGODB_URI" not found in process.env';
+mongoose_1.default.connect(process.env.MONGODB_URI, (err) => {
     if (err)
         throw err;
     console.log("Connected to MongoDB");

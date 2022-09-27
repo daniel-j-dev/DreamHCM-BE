@@ -1,6 +1,11 @@
 import express, { Request, Response, Router } from "express";
-import { getUserByEmail, createUser } from "../mongodb/userModel";
+import {
+  getUserByEmail,
+  createUser,
+  UNSAFE_getUserByEmail,
+} from "../mongodb/userModel";
 const bcrypt = require("bcryptjs");
+import { generateToken } from "./generateToken";
 
 const router: Router = express.Router();
 
@@ -13,16 +18,17 @@ router.get("/user", async (req: Request, res: Response) => {
 
   // "password" is excluded by default
   getUserByEmail(req.body.email)
-    .then((allUsers: any) => {
-      res.send(allUsers);
+    .then((usr: any) => {
+      res.send(usr);
     })
     .catch((err: any) => {
-      res.status(500).send(err);
+      console.log(err);
+      res.status(500).send("Database error");
     });
 });
 
 // Create a user account
-router.post("/user", async (req: Request, res: Response) => {
+router.post("/user/signup", async (req: Request, res: Response) => {
   // Check if request is valid (contains email and password)
   if (!req?.body?.email || !req.body.password) {
     res.status(400).send("An email address and password are required.");
@@ -49,8 +55,41 @@ router.post("/user", async (req: Request, res: Response) => {
       res.status(201).send("Account successfully created!");
     })
     .catch((err) => {
-      res.status(500).send(err);
+      console.log(err);
+      res.status(500).send("Database error");
     });
+});
+
+// Sign in
+
+router.post("/user/signin", async (req: Request, res: Response) => {
+  // Check for email and password
+  if (!req?.body?.email || !req.body.password) {
+    res.status(400).send("An email address and password are required.");
+    return;
+  }
+
+  // Check if user email exists in DB
+  const foundUser = await UNSAFE_getUserByEmail(req.body.email);
+
+  if (!foundUser) {
+    res.status(401).send("No user with that email was found.");
+    return;
+  }
+
+  // Check if the request password matches with the DB password hash
+  if (!bcrypt.compareSync(req.body.password, foundUser.password)) {
+    res.status(401).send("Password is incorrect.");
+    return;
+  }
+
+  // Generate and send a JWT
+  const newToken = generateToken({
+    _id: foundUser._id,
+    email: foundUser.email,
+  });
+
+  res.status(200).send(newToken);
 });
 
 export default router;

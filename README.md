@@ -10,4 +10,6 @@
 
 ```
 MONGODB_URI=
+JWT_SECRET=
+PORT=
 ```

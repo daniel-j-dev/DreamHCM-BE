@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const userModel_1 = require("../mongodb/userModel");
 const bcrypt = require("bcryptjs");
+const generateToken_1 = require("./generateToken");
 const router = express_1.default.Router();
 // Get a user by email
 router.get("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -25,15 +26,16 @@ router.get("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
     // "password" is excluded by default
     (0, userModel_1.getUserByEmail)(req.body.email)
-        .then((allUsers) => {
-        res.send(allUsers);
+        .then((usr) => {
+        res.send(usr);
     })
         .catch((err) => {
-        res.status(500).send(err);
+        console.log(err);
+        res.status(500).send("Database error");
     });
 }));
 // Create a user account
-router.post("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/user/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
     // Check if request is valid (contains email and password)
     if (!((_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.email) || !req.body.password) {
@@ -57,7 +59,34 @@ router.post("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(201).send("Account successfully created!");
     })
         .catch((err) => {
-        res.status(500).send(err);
+        console.log(err);
+        res.status(500).send("Database error");
     });
+}));
+// Sign in
+router.post("/user/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c;
+    // Check for email and password
+    if (!((_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.email) || !req.body.password) {
+        res.status(400).send("An email address and password are required.");
+        return;
+    }
+    // Check if user email exists in DB
+    const foundUser = yield (0, userModel_1.UNSAFE_getUserByEmail)(req.body.email);
+    if (!foundUser) {
+        res.status(401).send("No user with that email was found.");
+        return;
+    }
+    // Check if the request password matches with the DB password hash
+    if (!bcrypt.compareSync(req.body.password, foundUser.password)) {
+        res.status(401).send("Password is incorrect.");
+        return;
+    }
+    // Generate and send a JWT
+    const newToken = (0, generateToken_1.generateToken)({
+        _id: foundUser._id,
+        email: foundUser.email,
+    });
+    res.status(200).send(newToken);
 }));
 exports.default = router;

@@ -1,7 +1,7 @@
 // Imports
 import * as dotenv from "dotenv";
 dotenv.config();
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import userRouter from "./auth/userRouter";
 import mongoose from "mongoose";
@@ -13,13 +13,14 @@ const port: number = process.env.PORT ? parseInt(process.env.PORT) : 3001;
 app.use(cors());
 app.use(express.json());
 // Middleware for global error handling
-app.use((err: any, _req: any, res: any, next: Function) => {
+app.use((err: any, _req: Request, res: Response, next: Function) => {
   if (!err) return next();
   res.status(500).send("Server error");
 });
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || "", (err) => {
+if (!process.env.MONGODB_URI) throw '"MONGODB_URI" not found in process.env';
+mongoose.connect(process.env.MONGODB_URI, (err) => {
   if (err) throw err;
   console.log("Connected to MongoDB");
 });
