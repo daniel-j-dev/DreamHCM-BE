@@ -40,11 +40,6 @@ router.post(
       res.status(400).json({ errors: errors.array() });
       return;
     }
-    // Check if request is valid (contains email and password)
-    if (!req?.body?.email || !req.body.password) {
-      res.status(400).send("An email address and password are required.");
-      return;
-    }
 
     // Check if user email already exists...
     const foundUser = await getUserByEmail(req.body.email);

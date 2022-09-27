@@ -30,7 +30,6 @@ router.post(
   body("currentPosition").isString().isLength({ min: 1, max: 100 }),
   body("payType").isString().isLength({ min: 1, max: 100 }),
   body("pay").isFloat({ min: 0, max: 1000000000 }),
-  body("name").isLength({ min: 1, max: 100 }),
   body("hireDate").isFloat(),
   async (req: Request, res: Response) => {
     // Validate req.body ...
@@ -41,7 +40,14 @@ router.post(
     }
 
     // Create new member
-    createTeamMember(req.body)
+    const newMember = {
+      name: req.body.name,
+      currentPosition: req.body.currentPosition,
+      payType: req.body.payType,
+      pay: req.body.pay,
+      hireDate: req.body.hireDate,
+    };
+    createTeamMember(newMember)
       .then(() => {
         res.status(201).send("Team member created!");
       })
@@ -61,7 +67,6 @@ router.put(
   body("currentPosition").isString().isLength({ min: 1, max: 100 }),
   body("payType").isString().isLength({ min: 1, max: 100 }),
   body("pay").isFloat({ min: 0, max: 1000000000 }),
-  body("name").isLength({ min: 1, max: 100 }),
   body("hireDate").isFloat(),
   async (req: Request, res: Response) => {
     // Validate req.body ...
@@ -71,7 +76,17 @@ router.put(
       return;
     }
 
-    updateTeamMember(req.body)
+    // Update member
+    const updatedMember = {
+      _id: req.body._id,
+      name: req.body.name,
+      currentPosition: req.body.currentPosition,
+      payType: req.body.payType,
+      pay: req.body.pay,
+      hireDate: req.body.hireDate,
+    };
+
+    updateTeamMember(updatedMember)
       .then((updated: any) => {
         // Check if updated
         if (!updated) {

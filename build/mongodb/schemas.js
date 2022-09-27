@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.payHistory = exports.teamMember = exports.user = void 0;
+exports.payment = exports.teamMember = exports.user = void 0;
 // TypeScript types not working without using "require()"
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
@@ -22,7 +22,7 @@ const teamMemberSchema = new Schema({
 });
 // Pay history for Team Members
 const paymentSchema = new Schema({
-    teamMemberID: {
+    teamMemberId: {
         type: ObjectId,
         ref: "teamMember",
         required: true,
@@ -52,5 +52,5 @@ const user = mongoose.model("user", userSchema);
 exports.user = user;
 const teamMember = mongoose.model("teamMember", teamMemberSchema);
 exports.teamMember = teamMember;
-const payHistory = mongoose.model("payment", paymentSchema);
-exports.payHistory = payHistory;
+const payment = mongoose.model("payment", paymentSchema);
+exports.payment = payment;

@@ -37,16 +37,10 @@ router.get("/user", tokenUtils_1.verifyToken, (req, res) => __awaiter(void 0, vo
 }));
 // Create a user account
 router.post("/user/signup", (0, express_validator_1.body)("email").isEmail(), (0, express_validator_1.body)("password").isLength({ min: 6 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
     // Check for problems with "email" and "password"
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         res.status(400).json({ errors: errors.array() });
-        return;
-    }
-    // Check if request is valid (contains email and password)
-    if (!((_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.email) || !req.body.password) {
-        res.status(400).send("An email address and password are required.");
         return;
     }
     // Check if user email already exists...
@@ -72,9 +66,9 @@ router.post("/user/signup", (0, express_validator_1.body)("email").isEmail(), (0
 }));
 // Sign in
 router.post("/user/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c;
+    var _b;
     // Check for email and password
-    if (!((_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.email) || !req.body.password) {
+    if (!((_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.email) || !req.body.password) {
         res.status(400).send("An email address and password are required.");
         return;
     }

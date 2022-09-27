@@ -24,7 +24,7 @@ const teamMemberSchema = new Schema({
 
 // Pay history for Team Members
 const paymentSchema = new Schema({
-  teamMemberID: {
+  teamMemberId: {
     type: ObjectId,
     ref: "teamMember",
     required: true,
@@ -55,6 +55,6 @@ const user = mongoose.model("user", userSchema);
 
 const teamMember = mongoose.model("teamMember", teamMemberSchema);
 
-const payHistory = mongoose.model("payment", paymentSchema);
+const payment = mongoose.model("payment", paymentSchema);
 
-export { user, teamMember, payHistory };
+export { user, teamMember, payment };
