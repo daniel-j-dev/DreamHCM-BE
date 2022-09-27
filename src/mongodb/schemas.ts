@@ -5,9 +5,10 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 // HR User Account
+
 const userSchema = new Schema({
   email: { type: String, maxLength: 100, unique: true, required: true },
-  password: { type: String, maxLength: 1000, required: true },
+  password: { type: String, maxLength: 1000, select: false, required: true },
   dateAdded: { type: Date, default: Date.now, required: true },
 });
 
