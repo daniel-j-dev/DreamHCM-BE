@@ -6,6 +6,7 @@ import {
 } from "../mongodb/userModel";
 const bcrypt = require("bcryptjs");
 import { generateToken, verifyToken } from "../auth/tokenUtils";
+import { body, validationResult } from "express-validator";
 
 const router: Router = express.Router();
 
@@ -28,37 +29,48 @@ router.get("/user", verifyToken, async (req: Request, res: Response) => {
 });
 
 // Create a user account
-router.post("/user/signup", async (req: Request, res: Response) => {
-  // Check if request is valid (contains email and password)
-  if (!req?.body?.email || !req.body.password) {
-    res.status(400).send("An email address and password are required.");
-    return;
+router.post(
+  "/user/signup",
+  body("email").isEmail(),
+  body("password").isLength({ min: 6 }),
+  async (req: Request, res: Response) => {
+    // Check for problems with "email" and "password"
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+    // Check if request is valid (contains email and password)
+    if (!req?.body?.email || !req.body.password) {
+      res.status(400).send("An email address and password are required.");
+      return;
+    }
+
+    // Check if user email already exists...
+    const foundUser = await getUserByEmail(req.body.email);
+
+    if (foundUser) {
+      res.status(400).send("User with matching email already exists.");
+      return;
+    }
+
+    // If user doesn't already exist, create the new user object...
+    const newUser = {
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 12),
+    };
+
+    // Save new user to DB
+    await createUser(newUser)
+      .then(() => {
+        res.status(201).send("Account successfully created!");
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send("Database error");
+      });
   }
-
-  // Check if user email already exists...
-  const foundUser = await getUserByEmail(req.body.email);
-
-  if (foundUser) {
-    res.status(400).send("User with matching email already exists.");
-    return;
-  }
-
-  // If user doesn't already exist, create the new user object...
-  const newUser = {
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 12),
-  };
-
-  // Save new user to DB
-  await createUser(newUser)
-    .then(() => {
-      res.status(201).send("Account successfully created!");
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send("Database error");
-    });
-});
+);
 
 // Sign in
 
