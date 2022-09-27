@@ -4,6 +4,7 @@ dotenv.config();
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import userRouter from "./routes/userRouter";
+import teamMemberRouter from "./routes/teamMemberRouter";
 import mongoose from "mongoose";
 
 const app: Application = express();
@@ -27,6 +28,7 @@ mongoose.connect(process.env.MONGODB_URI, (err) => {
 
 // Routes
 app.use("/", userRouter);
+app.use("/", teamMemberRouter);
 
 // Start server
 app.listen(port, () => {
