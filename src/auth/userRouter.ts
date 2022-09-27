@@ -38,7 +38,6 @@ router.post("/user", async (req: Request, res: Response) => {
   }
 
   // If user doesn't already exist, create the new user object...
-
   const newUser = {
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 12),

@@ -12,6 +12,11 @@ const port: number = process.env.PORT ? parseInt(process.env.PORT) : 3001;
 // Middleware
 app.use(cors());
 app.use(express.json());
+// Middleware for global error handling
+app.use((err: any, _req: any, res: any, next: Function) => {
+  if (!err) return next();
+  res.status(500).send("Server error");
+});
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || "", (err) => {
