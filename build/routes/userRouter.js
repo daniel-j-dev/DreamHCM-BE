@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const userModel_1 = require("../mongodb/userModel");
 const bcrypt = require("bcryptjs");
-const tokenUtils_1 = require("./tokenUtils");
+const tokenUtils_1 = require("../auth/tokenUtils");
 const router = express_1.default.Router();
 // Get a user by email
 router.get("/user", tokenUtils_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

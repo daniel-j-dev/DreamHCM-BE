@@ -5,12 +5,12 @@ import {
   UNSAFE_getUserByEmail,
 } from "../mongodb/userModel";
 const bcrypt = require("bcryptjs");
-import { generateToken } from "./generateToken";
+import { generateToken, verifyToken } from "../auth/tokenUtils";
 
 const router: Router = express.Router();
 
 // Get a user by email
-router.get("/user", async (req: Request, res: Response) => {
+router.get("/user", verifyToken, async (req: Request, res: Response) => {
   if (!req?.body?.email) {
     res.status(400).send("An email address is required.");
     return;

@@ -31,7 +31,7 @@ const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const userRouter_1 = __importDefault(require("./auth/userRouter"));
+const userRouter_1 = __importDefault(require("./routes/userRouter"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const app = (0, express_1.default)();
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3001;
