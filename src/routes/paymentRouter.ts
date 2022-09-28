@@ -55,12 +55,17 @@ router.post(
   }
 );
 
-// Get payment by teamMemberID
-// No express-validator - it kept sending needless 400 errors
-// ... likely because we're accessing req.body from a get request
+// Get payments by teamMemberID
 router.get("/payment", verifyToken, (req: any, res: Response) => {
+  if (!req?.query?.teamMemberId) {
+    res
+      .status(400)
+      .send("Please provide a teamMemberId in the request params.");
+    return;
+  }
+
   // Find payments
-  getMemberPayments(req.body.teamMemberId)
+  getMemberPayments(req.query.teamMemberId)
     .then((found: any) => {
       if (!found) {
         res.status(404).send("No payments found for this member.");
