@@ -56,33 +56,23 @@ router.post(
 );
 
 // Get payment by teamMemberID
-router.get(
-  "/payment",
-  verifyToken,
-  body("teamMemberId").exists().isString(),
-  (req: any, res: Response) => {
-    // Validate req.body ...
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
-      return;
-    }
+// No express-validator - it kept sending needless 400 errors
+// ... likely because we're accessing req.body from a get request
+router.get("/payment", verifyToken, (req: any, res: Response) => {
+  // Find payments
+  getMemberPayments(req.body.teamMemberId)
+    .then((found: any) => {
+      if (!found) {
+        res.status(404).send("No payments found for this member.");
+        return;
+      }
 
-    // Find payments
-    getMemberPayments(req.body.teamMemberId)
-      .then((found: any) => {
-        if (!found) {
-          res.status(404).send("No payments found for this member.");
-          return;
-        }
-
-        res.status(200).send(found);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        res.status(500).send("Database error.");
-      });
-  }
-);
+      res.status(200).send(found);
+    })
+    .catch((err: any) => {
+      console.log(err);
+      res.status(500).send("Database error.");
+    });
+});
 
 export default router;

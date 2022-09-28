@@ -56,13 +56,9 @@ router.post("/payment", tokenUtils_1.verifyToken, (0, express_validator_1.body)(
     }
 }));
 // Get payment by teamMemberID
-router.get("/payment", tokenUtils_1.verifyToken, (0, express_validator_1.body)("teamMemberId").exists().isString(), (req, res) => {
-    // Validate req.body ...
-    const errors = (0, express_validator_1.validationResult)(req);
-    if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() });
-        return;
-    }
+// No express-validator - it kept sending needless 400 errors
+// ... likely because we're accessing req.body from a get request
+router.get("/payment", tokenUtils_1.verifyToken, (req, res) => {
     // Find payments
     (0, paymentModel_1.getMemberPayments)(req.body.teamMemberId)
         .then((found) => {
