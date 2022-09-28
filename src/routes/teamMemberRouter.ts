@@ -67,7 +67,6 @@ router.put(
   body("currentPosition").isString().isLength({ min: 1, max: 100 }),
   body("payType").isString().isLength({ min: 1, max: 100 }),
   body("pay").isFloat({ min: 0, max: 1000000000 }),
-  body("hireDate").isFloat(),
   async (req: Request, res: Response) => {
     // Validate req.body ...
     const errors = validationResult(req);
