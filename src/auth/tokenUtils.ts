@@ -21,7 +21,7 @@ export const generateToken = (user: any) => {
   };
 
   const options = {
-    expiresIn: "1d",
+    expiresIn: "14d",
   };
 
   return jwt.sign(payload, secret, options);
