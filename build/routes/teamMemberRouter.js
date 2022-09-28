@@ -54,7 +54,7 @@ router.post("/teammember", tokenUtils_1.verifyToken, (0, express_validator_1.bod
     });
 }));
 // Update a new team member
-router.put("/teammember", tokenUtils_1.verifyToken, (0, express_validator_1.body)("_id").exists(), (0, express_validator_1.body)("name").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("currentPosition").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("payType").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("pay").isFloat({ min: 0, max: 1000000000 }), (0, express_validator_1.body)("hireDate").exists(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/teammember", tokenUtils_1.verifyToken, (0, express_validator_1.body)("_id").exists(), (0, express_validator_1.body)("name").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("currentPosition").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("payType").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("pay").isFloat({ min: 0, max: 1000000000 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Validate req.body ...
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
