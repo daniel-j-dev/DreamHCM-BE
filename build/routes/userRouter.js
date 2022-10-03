@@ -36,7 +36,7 @@ router.get("/user", tokenUtils_1.verifyToken, (req, res) => __awaiter(void 0, vo
     });
 }));
 // Create a user account
-router.post("/user/signup", (0, express_validator_1.body)("email").isEmail(), (0, express_validator_1.body)("password").isLength({ min: 6 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/user/signup", (0, express_validator_1.body)("email").isEmail().isLength({ min: 1, max: 500 }), (0, express_validator_1.body)("password").isLength({ min: 6, max: 500 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Check for problems with "email" and "password"
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {

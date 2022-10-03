@@ -16,7 +16,7 @@ const router: Router = express.Router();
 router.post(
   "/schedule",
   verifyToken,
-  body("teamMemberId").isString(),
+  body("teamMemberId").isString().isLength({ min: 1, max: 100 }),
   body("workDate").isISO8601(),
   async (req: any, res: Response) => {
     // Validate req.body ...

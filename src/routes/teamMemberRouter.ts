@@ -64,7 +64,7 @@ router.post(
 router.put(
   "/teammember",
   verifyToken,
-  body("_id").exists(),
+  body("_id").isString().isLength({ min: 1, max: 100 }),
   body("name").isString().isLength({ min: 1, max: 100 }),
   body("currentPosition").isString().isLength({ min: 1, max: 100 }),
   body("payType").isString().isLength({ min: 1, max: 100 }),

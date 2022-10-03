@@ -20,7 +20,7 @@ const express_validator_1 = require("express-validator");
 // Setup Router
 const router = express_1.default.Router();
 // Create a payment
-router.post("/payment", tokenUtils_1.verifyToken, (0, express_validator_1.body)("teamMemberId").isString(), (0, express_validator_1.body)("payAmount").isFloat({ min: 0, max: 1000000000 }), (0, express_validator_1.body)("originalAmount").isFloat({ min: 0, max: 1000000000 }), (0, express_validator_1.body)("modifications").isArray(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/payment", tokenUtils_1.verifyToken, (0, express_validator_1.body)("teamMemberId").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("payAmount").isFloat({ min: 0, max: 1000000000 }), (0, express_validator_1.body)("originalAmount").isFloat({ min: 0, max: 1000000000 }), (0, express_validator_1.body)("modifications").isArray({ min: 0, max: 500 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Validate req.body ...
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {

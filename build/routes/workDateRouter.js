@@ -20,7 +20,7 @@ const express_validator_1 = require("express-validator");
 // Setup Router
 const router = express_1.default.Router();
 // Create a work day
-router.post("/schedule", tokenUtils_1.verifyToken, (0, express_validator_1.body)("teamMemberId").isString(), (0, express_validator_1.body)("workDate").isISO8601(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/schedule", tokenUtils_1.verifyToken, (0, express_validator_1.body)("teamMemberId").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("workDate").isISO8601(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Validate req.body ...
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {

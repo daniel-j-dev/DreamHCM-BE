@@ -11,10 +11,10 @@ const router: Router = express.Router();
 router.post(
   "/payment",
   verifyToken,
-  body("teamMemberId").isString(),
+  body("teamMemberId").isString().isLength({ min: 1, max: 100 }),
   body("payAmount").isFloat({ min: 0, max: 1000000000 }),
   body("originalAmount").isFloat({ min: 0, max: 1000000000 }),
-  body("modifications").isArray(),
+  body("modifications").isArray({ min: 0, max: 500 }),
   async (req: any, res: Response) => {
     // Validate req.body ...
     const errors = validationResult(req);

@@ -31,8 +31,8 @@ router.get("/user", verifyToken, async (req: Request, res: Response) => {
 // Create a user account
 router.post(
   "/user/signup",
-  body("email").isEmail(),
-  body("password").isLength({ min: 6 }),
+  body("email").isEmail().isLength({ min: 1, max: 500 }),
+  body("password").isLength({ min: 6, max: 500 }),
   async (req: Request, res: Response) => {
     // Check for problems with "email" and "password"
     const errors = validationResult(req);
