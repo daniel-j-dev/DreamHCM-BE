@@ -51,10 +51,23 @@ const paymentSchema = new Schema({
   dateAdded: { type: Date, default: Date.now, required: true },
 });
 
+// Pay history for Team Members
+const workDaySchema = new Schema({
+  teamMemberId: {
+    type: ObjectId,
+    ref: "teamMember",
+    required: true,
+  },
+  workDate: { type: Date, required: true },
+  dateAdded: { type: Date, default: Date.now, required: true },
+});
+
 const user = mongoose.model("user", userSchema);
 
 const teamMember = mongoose.model("teamMember", teamMemberSchema);
 
 const payment = mongoose.model("payment", paymentSchema);
 
-export { user, teamMember, payment };
+const workDate = mongoose.model("workDate", workDaySchema);
+
+export { user, teamMember, payment, workDate };

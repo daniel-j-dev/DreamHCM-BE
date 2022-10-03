@@ -6,6 +6,7 @@ import cors from "cors";
 import userRouter from "./routes/userRouter";
 import teamMemberRouter from "./routes/teamMemberRouter";
 import paymentRouter from "./routes/paymentRouter";
+import workDateRouter from "./routes/workDateRouter";
 import mongoose from "mongoose";
 
 const app: Application = express();
@@ -31,6 +32,7 @@ mongoose.connect(process.env.MONGODB_URI, (err) => {
 app.use("/", userRouter);
 app.use("/", teamMemberRouter);
 app.use("/", paymentRouter);
+app.use("/", workDateRouter);
 
 // Start server
 app.listen(port, () => {

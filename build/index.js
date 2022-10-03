@@ -34,6 +34,7 @@ const cors_1 = __importDefault(require("cors"));
 const userRouter_1 = __importDefault(require("./routes/userRouter"));
 const teamMemberRouter_1 = __importDefault(require("./routes/teamMemberRouter"));
 const paymentRouter_1 = __importDefault(require("./routes/paymentRouter"));
+const workDateRouter_1 = __importDefault(require("./routes/workDateRouter"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const app = (0, express_1.default)();
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3001;
@@ -58,6 +59,7 @@ mongoose_1.default.connect(process.env.MONGODB_URI, (err) => {
 app.use("/", userRouter_1.default);
 app.use("/", teamMemberRouter_1.default);
 app.use("/", paymentRouter_1.default);
+app.use("/", workDateRouter_1.default);
 // Start server
 app.listen(port, () => {
     console.log("Server started");
