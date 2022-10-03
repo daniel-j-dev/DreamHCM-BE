@@ -68,6 +68,6 @@ const teamMember = mongoose.model("teamMember", teamMemberSchema);
 
 const payment = mongoose.model("payment", paymentSchema);
 
-const workDate = mongoose.model("workDate", workDaySchema);
+const workDay = mongoose.model("workDate", workDaySchema);
 
-export { user, teamMember, payment, workDate };
+export { user, teamMember, payment, workDay };

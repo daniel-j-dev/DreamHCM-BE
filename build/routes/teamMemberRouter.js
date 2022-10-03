@@ -15,7 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const tokenUtils_1 = require("../auth/tokenUtils");
 const teamMemberModel_1 = require("../mongodb/teamMemberModel");
+const paymentModel_1 = require("../mongodb/paymentModel");
 const express_validator_1 = require("express-validator");
+const workDateModel_1 = require("../mongodb/workDateModel");
 const router = express_1.default.Router();
 // Get all team members
 router.get("/teammember", tokenUtils_1.verifyToken, (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,7 +31,7 @@ router.get("/teammember", tokenUtils_1.verifyToken, (_req, res) => __awaiter(voi
     });
 }));
 // Add a new team member
-router.post("/teammember", tokenUtils_1.verifyToken, (0, express_validator_1.body)("name").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("currentPosition").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("payType").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("pay").isFloat({ min: 0, max: 1000000000 }), (0, express_validator_1.body)("hireDate").isFloat(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/teammember", tokenUtils_1.verifyToken, (0, express_validator_1.body)("name").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("currentPosition").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("payType").isString().isLength({ min: 1, max: 100 }), (0, express_validator_1.body)("pay").isFloat({ min: 0, max: 1000000000 }), (0, express_validator_1.body)("hireDate").isISO8601(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Validate req.body ...
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -94,14 +96,18 @@ router.delete("/teammember", tokenUtils_1.verifyToken, (0, express_validator_1.b
     }
     // Delete team member
     (0, teamMemberModel_1.deleteTeamMember)(req.body._id)
-        .then((deleted) => {
+        .then((deleted) => __awaiter(void 0, void 0, void 0, function* () {
         // Check if deleted
         if (!deleted) {
             res.status(404).send("Team member with matching _id was not found.");
             return;
         }
+        // Delete team member's payment entries
+        yield (0, paymentModel_1.clearMemberPayments)(req.body._id);
+        // Delete team member's wordDat
+        yield (0, workDateModel_1.clearMemberWorkDays)(req.body._id);
         res.status(200).send("Team member was successfully deleted.");
-    })
+    }))
         .catch((error) => {
         console.log(error);
         res.status(500).send("Database error");

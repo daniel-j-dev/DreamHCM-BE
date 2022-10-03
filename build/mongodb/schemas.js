@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.workDate = exports.payment = exports.teamMember = exports.user = void 0;
+exports.workDay = exports.payment = exports.teamMember = exports.user = void 0;
 // TypeScript types not working without using "require()"
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
@@ -64,5 +64,5 @@ const teamMember = mongoose.model("teamMember", teamMemberSchema);
 exports.teamMember = teamMember;
 const payment = mongoose.model("payment", paymentSchema);
 exports.payment = payment;
-const workDate = mongoose.model("workDate", workDaySchema);
-exports.workDate = workDate;
+const workDay = mongoose.model("workDate", workDaySchema);
+exports.workDay = workDay;

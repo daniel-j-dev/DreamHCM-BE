@@ -6,7 +6,9 @@ import {
   updateTeamMember,
   deleteTeamMember,
 } from "../mongodb/teamMemberModel";
+import { clearMemberPayments } from "../mongodb/paymentModel";
 import { body, validationResult } from "express-validator";
+import { clearMemberWorkDays } from "../mongodb/workDateModel";
 
 const router: Router = express.Router();
 
@@ -30,7 +32,7 @@ router.post(
   body("currentPosition").isString().isLength({ min: 1, max: 100 }),
   body("payType").isString().isLength({ min: 1, max: 100 }),
   body("pay").isFloat({ min: 0, max: 1000000000 }),
-  body("hireDate").isFloat(),
+  body("hireDate").isISO8601(),
   async (req: Request, res: Response) => {
     // Validate req.body ...
     const errors = validationResult(req);
@@ -117,12 +119,18 @@ router.delete(
 
     // Delete team member
     deleteTeamMember(req.body._id)
-      .then((deleted: any) => {
+      .then(async (deleted: any) => {
         // Check if deleted
         if (!deleted) {
           res.status(404).send("Team member with matching _id was not found.");
           return;
         }
+
+        // Delete team member's payment entries
+        await clearMemberPayments(req.body._id);
+
+        // Delete team member's wordDat
+        await clearMemberWorkDays(req.body._id);
 
         res.status(200).send("Team member was successfully deleted.");
       })

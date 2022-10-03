@@ -9,3 +9,8 @@ export const getMemberPayments = (id: string) => {
 export const createPayment = (payDetails: any) => {
   return payment.create(payDetails);
 };
+
+// Delete all payment history of a team member
+export const clearMemberPayments = (id: string) => {
+  return payment.deleteMany({ teamMemberId: id });
+};
