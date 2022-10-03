@@ -4,6 +4,7 @@ import {
   getMemberSchedule,
   createWorkDay,
   getDuplicateWorkDates,
+  deleteWorkDay,
 } from "../mongodb/workDateModel";
 import { getTeamMemberById } from "../mongodb/teamMemberModel";
 import { body, validationResult } from "express-validator";
@@ -90,5 +91,37 @@ router.get("/schedule", verifyToken, (req: any, res: Response) => {
       res.status(500).send("Database error.");
     });
 });
+
+// Delete a work day
+router.delete(
+  "/schedule",
+  verifyToken,
+  body("teamMemberId").isString(),
+  body("workDate").isISO8601(),
+  async (req: any, res: Response) => {
+    // Validate req.body ...
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+
+    // Delete work day
+    deleteWorkDay(req.body.teamMemberId, req.body.workDate)
+      .then((deleted: any) => {
+        // Check if deleted
+        if (!deleted) {
+          res.status(404).send("Work day with matching details was not found.");
+          return;
+        }
+
+        res.status(200).send("Work day was successfully deleted.");
+      })
+      .catch((error: any) => {
+        console.log(error);
+        res.status(500).send("Database error");
+      });
+  }
+);
 
 export default router;

@@ -82,4 +82,27 @@ router.get("/schedule", tokenUtils_1.verifyToken, (req, res) => {
         res.status(500).send("Database error.");
     });
 });
+// Delete a work day
+router.delete("/schedule", tokenUtils_1.verifyToken, (0, express_validator_1.body)("teamMemberId").isString(), (0, express_validator_1.body)("workDate").isISO8601(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Validate req.body ...
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+    }
+    // Delete work day
+    (0, workDateModel_1.deleteWorkDay)(req.body.teamMemberId, req.body.workDate)
+        .then((deleted) => {
+        // Check if deleted
+        if (!deleted) {
+            res.status(404).send("Work day with matching details was not found.");
+            return;
+        }
+        res.status(200).send("Work day was successfully deleted.");
+    })
+        .catch((error) => {
+        console.log(error);
+        res.status(500).send("Database error");
+    });
+}));
 exports.default = router;

@@ -14,3 +14,11 @@ export const createWorkDay = (newDate: any) => {
 export const getDuplicateWorkDates = (teamMemberId: number, wDate: any) => {
   return workDate.find({ teamMemberId: teamMemberId, workDate: wDate });
 };
+
+// Delete a work day
+export const deleteWorkDay = (teamMemberId: number, wDate: any) => {
+  return workDate.findOneAndDelete({
+    teamMemberId: teamMemberId,
+    workDate: wDate,
+  });
+};

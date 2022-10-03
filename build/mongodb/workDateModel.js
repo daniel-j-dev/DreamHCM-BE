@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDuplicateWorkDates = exports.createWorkDay = exports.getMemberSchedule = void 0;
+exports.deleteWorkDay = exports.getDuplicateWorkDates = exports.createWorkDay = exports.getMemberSchedule = void 0;
 const schemas_1 = require("./schemas");
 // Get payments by teamMemberID
 const getMemberSchedule = (id) => {
@@ -17,3 +17,11 @@ const getDuplicateWorkDates = (teamMemberId, wDate) => {
     return schemas_1.workDate.find({ teamMemberId: teamMemberId, workDate: wDate });
 };
 exports.getDuplicateWorkDates = getDuplicateWorkDates;
+// Delete a work day
+const deleteWorkDay = (teamMemberId, wDate) => {
+    return schemas_1.workDate.findOneAndDelete({
+        teamMemberId: teamMemberId,
+        workDate: wDate,
+    });
+};
+exports.deleteWorkDay = deleteWorkDay;
